@@ -1,2 +1,3 @@
-仿照redis搭建数据库
+# MDB
+Implementing a **memory database** like Redis with C++.
 
