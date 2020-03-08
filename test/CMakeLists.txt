@@ -8,12 +8,18 @@ target_include_directories(Tests
     ${PROJECT_SOURCE_DIR}/src
 )
 
-find_package(GTest REQUIRED)
+find_package(GTest CONFIG REQUIRED)
 
-target_link_libraries(Tests PRIVATE
-    gtest
-    pthread
-)
+if(WIN32)
+	target_link_libraries(Tests PRIVATE
+		GTest::gtest
+	)
+elseif(UNIX)
+	target_link_libraries(Tests PRIVATE
+		gtest
+		pthread
+	)
+endif (WIN32)
 
 add_test(NAME AllTest
     COMMAND ./Tests
