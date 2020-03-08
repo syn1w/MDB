@@ -11,14 +11,14 @@ target_include_directories(Tests
 find_package(GTest CONFIG REQUIRED)
 
 if(WIN32)
-	target_link_libraries(Tests PRIVATE
-		GTest::gtest
-	)
+    target_link_libraries(Tests PRIVATE
+        GTest::gtest
+    )
 elseif(UNIX)
-	target_link_libraries(Tests PRIVATE
-		gtest
-		pthread
-	)
+    target_link_libraries(Tests PRIVATE
+        gtest
+        pthread
+    )
 endif (WIN32)
 
 add_test(NAME AllTest
