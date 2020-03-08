@@ -1,0 +1,5 @@
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
+    ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/bin
+)
+
+add_executable(MDB MDB.cpp)
