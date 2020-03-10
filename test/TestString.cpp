@@ -6,6 +6,7 @@ using namespace mdb;
 TEST(StringTest, test0) {
     String str;
     EXPECT_EQ(str.size(), 0);
+    EXPECT_TRUE(str.isEmpty());
 }
 
 TEST(StringTest, test1) {
@@ -15,7 +16,9 @@ TEST(StringTest, test1) {
     EXPECT_EQ(str.size(), 16);
     EXPECT_EQ(str[15], '!');
     EXPECT_EQ(str[16], '\0');
+    EXPECT_FALSE(str.isEmpty());
     str.clear();
+    EXPECT_TRUE(str.isEmpty());
     EXPECT_EQ(str.size(), 0);
 
     String str1 = "...";

@@ -15,11 +15,14 @@ public:
     using ValueType = char;
 
 public:
-    String() : mBuffer() { }
+    String() : mBuffer(1) { 
+        mBuffer[0] = '\0';
+    }
 
     String(const void* data, SizeType len) 
         : mBuffer(static_cast<const ValueType*>(data),
-                  static_cast<const ValueType*>(data) + len) {
+                  static_cast<const ValueType*>(data) + len + 1) {
+        mBuffer[len] = '\0';
     }
 
     String(const ValueType* str) : String(str, std::strlen(str)) { }
@@ -33,15 +36,15 @@ public:
     ~String() noexcept = default;
 
     SizeType size() const {
-        return mBuffer.size();
+        return mBuffer.size() - 1;
     }
 
     SizeType length() const {
-        return mBuffer.size();
+        return size();
     }
 
     bool isEmpty() const {
-        return mBuffer.size() == 0;
+        return size() == 0;
     }
 
     SizeType capacity() const {
@@ -50,12 +53,12 @@ public:
 
     char& operator[](SizeType pos) {
         assert(pos <= size());
-        return mBuffer[pos];
+        return mBuffer.data()[pos];
     }
 
     const char& operator[](SizeType pos) const {
         assert(pos <= size());
-        return mBuffer[pos];
+        return mBuffer.data()[pos];
     }
 
     const ValueType* c_str() const {
@@ -79,19 +82,19 @@ public:
     }
 
     const char* cend() const {
-        return mBuffer.data() + mBuffer.size();
+        return mBuffer.data() + size();
     }
 
     const char* end() const {
-        return mBuffer.data() + mBuffer.size();
+        return mBuffer.data() + size();
     }
 
     char* end() {
-        return mBuffer.data() + mBuffer.size();
+        return mBuffer.data() + size();
     }
 
     void clear() {
-        mBuffer.clear();
+        mBuffer.resize(1, '\0');
     }
 
     void swap(String& rhs) noexcept {
@@ -99,12 +102,12 @@ public:
     }
 
     String& append(SizeType count, ValueType ch) {
-        mBuffer.insert(mBuffer.end(), count, ch);
+        mBuffer.insert(std::prev(mBuffer.end()), count, ch);
         return *this;
     }
 
     String& append(const String& str) {
-        mBuffer.insert(mBuffer.end(), str.begin(), str.end());
+        mBuffer.insert(std::prev(mBuffer.end()), str.begin(), str.end());
         return *this;
     }
 
@@ -122,7 +125,8 @@ public:
     }
 
     void resize(SizeType newSize, ValueType value = ValueType()) {
-        mBuffer.resize(newSize);
+        mBuffer.resize(newSize + 1, value);
+        mBuffer[newSize] = '\0';
     }
 private:
     std::vector<ValueType> mBuffer;
