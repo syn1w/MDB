@@ -1,7 +1,7 @@
 // Simple dynamic string library.
 // Using String instead of std::string for binary security.
-#ifndef STRING_HPP
-#define STRING_HPP
+#ifndef MDB_STRING_HPP
+#define MDB_STRING_HPP
 
 #include <cassert>
 #include <cstring>
@@ -144,4 +144,4 @@ bool operator<(const String& lhs, const String& rhs) {
 
 } // namespace mdb
 
-#endif // !STRING_HPP
+#endif // !MDB_STRING_HPP
