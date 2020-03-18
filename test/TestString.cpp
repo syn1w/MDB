@@ -16,6 +16,7 @@ TEST(StringTest, test1) {
     EXPECT_EQ(str.size(), 16);
     EXPECT_EQ(str[15], '!');
     EXPECT_EQ(str[16], '\0');
+    EXPECT_EQ(*str.begin(), 'I');
     EXPECT_FALSE(str.isEmpty());
     str.clear();
     EXPECT_TRUE(str.isEmpty());
@@ -35,4 +36,24 @@ TEST(StringTest, test2) {
     EXPECT_EQ(str1, str2);
     str2 += "!!!";
     EXPECT_EQ(str2.size(), 12);
+}
+
+TEST(StringTest, test3) {
+    String str1 = "............";
+    EXPECT_EQ(str1.length(), 12);
+    for (char ch : str1) {
+        EXPECT_EQ(ch, '.');
+    }
+}
+
+TEST(StringTest, test4) {
+    String str1;
+    str1 += "abcd";
+    EXPECT_EQ(str1.size(), 4);
+    EXPECT_EQ(str1[0], 'a');
+    EXPECT_EQ(str1[3], 'd');
+    EXPECT_EQ(str1[2], 'c');
+    str1 += "dcba";
+    EXPECT_EQ(str1.size(), 8);
+    EXPECT_EQ(str1[7], 'a');
 }
