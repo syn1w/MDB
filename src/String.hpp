@@ -33,6 +33,22 @@ public:
     String& operator=(const String&) = default;
     String& operator=(String&&) noexcept = default;
 
+    String& operator=(const ValueType* str) {
+        return assign(str);
+    }
+
+    String& assign(const ValueType* str) {
+        std::size_t strLen = std::strlen(str) + 1;
+        mBuffer.assign(str, str + strLen);
+        return *this;
+    }
+
+    String& assign(const ValueType* str, std::size_t len) {
+        mBuffer.assign(str, str + len + 1);
+        mBuffer[len] = '\0';
+        return *this;
+    }
+
     ~String() noexcept = default;
 
     SizeType size() const {
@@ -94,7 +110,8 @@ public:
     }
 
     void clear() {
-        mBuffer.resize(1, '\0');
+        mBuffer.clear();
+        mBuffer.emplace_back('\0');
     }
 
     void swap(String& rhs) noexcept {
@@ -113,6 +130,11 @@ public:
 
     String& append(const ValueType* cstr) {
         String str{cstr};
+        return append(str);
+    }
+
+    String& append(const void* data, std::size_t len) {
+        String str{data, len};
         return append(str);
     }
 
