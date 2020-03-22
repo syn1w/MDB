@@ -28,8 +28,8 @@ public:
 
     String(const void* data, SizeType len) 
         : mBuffer(static_cast<const ValueType*>(data),
-                  static_cast<const ValueType*>(data) + len + 1) {
-        mBuffer[len] = '\0';
+                  static_cast<const ValueType*>(data) + len) {
+        mBuffer.push_back('\0');
     }
 
     String(const ValueType* str) : String(str, std::strlen(str)) { }
@@ -50,9 +50,10 @@ public:
         return *this;
     }
 
-    String& assign(const ValueType* str, SizeType len) {
-        mBuffer.assign(str, str + len + 1);
-        mBuffer[len] = '\0';
+    String& assign(const void* str, SizeType len) {
+        mBuffer.assign(static_cast<const ValueType*>(str), 
+            static_cast<const ValueType*>(str) + len);
+        mBuffer.push_back('\0');
         return *this;
     }
 
