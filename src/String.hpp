@@ -4,7 +4,12 @@
 #define MDB_STRING_HPP
 
 #include <cassert>
+#include <cctype>
+#include <cstdarg>
+#include <cstdio>
 #include <cstring>
+#include <sstream>
+#include <string>
 #include <vector>
 
 namespace mdb {
@@ -13,6 +18,8 @@ class String {
 public:
     using SizeType  = std::size_t;
     using ValueType = char;
+public:
+    static const SizeType npos = static_cast<SizeType>(-1);
 
 public:
     String() : mBuffer(1) { 
@@ -38,12 +45,12 @@ public:
     }
 
     String& assign(const ValueType* str) {
-        std::size_t strLen = std::strlen(str) + 1;
+        SizeType strLen = std::strlen(str) + 1;
         mBuffer.assign(str, str + strLen);
         return *this;
     }
 
-    String& assign(const ValueType* str, std::size_t len) {
+    String& assign(const ValueType* str, SizeType len) {
         mBuffer.assign(str, str + len + 1);
         mBuffer[len] = '\0';
         return *this;
@@ -67,12 +74,12 @@ public:
         return mBuffer.capacity();
     }
 
-    char& operator[](SizeType pos) {
+    ValueType& operator[](SizeType pos) {
         assert(pos <= size());
         return mBuffer.data()[pos];
     }
 
-    const char& operator[](SizeType pos) const {
+    const ValueType& operator[](SizeType pos) const {
         assert(pos <= size());
         return mBuffer.data()[pos];
     }
@@ -85,27 +92,27 @@ public:
         return mBuffer.data();
     }
 
-    const char* cbegin() const {
+    const ValueType* cbegin() const {
         return mBuffer.data();
     }
 
-    const char* begin() const {
+    const ValueType* begin() const {
         return mBuffer.data();
     }
 
-    char* begin() {
+    ValueType* begin() {
         return mBuffer.data();
     }
 
-    const char* cend() const {
+    const ValueType* cend() const {
         return mBuffer.data() + size();
     }
 
-    const char* end() const {
+    const ValueType* end() const {
         return mBuffer.data() + size();
     }
 
-    char* end() {
+    ValueType* end() {
         return mBuffer.data() + size();
     }
 
@@ -133,9 +140,77 @@ public:
         return append(str);
     }
 
-    String& append(const void* data, std::size_t len) {
+    String& append(const void* data, SizeType len) {
         String str{data, len};
         return append(str);
+    }
+
+    String& appendArgs() {
+        return *this;
+    }
+
+    template <typename First, typename... Rest>
+    String& appendArgs(First&& first, Rest&&... rest) {
+        std::stringstream ss;
+        ss << std::forward<First>(first);
+        std::string str;
+        ss >> str;
+        append(str.c_str(), str.size());
+        return appendArgs(std::forward<Rest>(rest)...);
+    }
+
+    String& appendVaList(const char* fmt, std::va_list ap) {
+        static const SizeType kSmallBufLen = 1024;
+        ValueType sbuf[kSmallBufLen];
+
+        std::va_list cpy;
+        va_copy(cpy, ap);
+        int rlen = std::vsnprintf(sbuf, kSmallBufLen, fmt, cpy);
+        assert(rlen >= 0);
+        if (rlen < kSmallBufLen) {
+            append(sbuf, rlen);
+            return *this;
+        }
+
+        // larger buffer
+        ValueType* buf = reinterpret_cast<ValueType*>(
+            ::operator new(sizeof(ValueType) * (rlen + 1)));
+
+        std::vsnprintf(buf, static_cast<SizeType>(rlen), fmt, ap);
+        append(buf, rlen);
+        ::operator delete(buf);
+
+        return *this;
+    }
+
+    String& appendFmtStr(const char* fmt, ...) {
+        std::va_list ap;
+        va_start(ap, fmt);
+        appendVaList(fmt, ap);
+        va_end(ap);
+        return *this;
+    }
+
+    String substr(SizeType pos = 0, SizeType count = npos) {
+        if (count == npos) {
+            count = size() - pos;
+        }
+        assert(pos < size() && "string index out of range");
+        assert(pos + count <= size() && "string index out of range");
+
+        return String{ c_str() + pos, count };
+    }
+
+    void toLower() {
+        for (auto& ch : mBuffer) {
+            ch = std::tolower(ch);
+        }
+    }
+
+    void toUpper() {
+        for (auto& ch : mBuffer) {
+            ch = std::toupper(ch);
+        }
     }
 
     String& operator+=(const String& str) {
