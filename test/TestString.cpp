@@ -148,3 +148,11 @@ TEST(StringTest, test9) {
     EXPECT_EQ(str1[3], 'd');
     EXPECT_EQ(str1[4], '1');
 }
+
+TEST(StringTest, test10) {
+    auto str1 = String("abcd\0efg");
+    auto str2 = String("abcd\0efg");
+    EXPECT_TRUE(str1 == str2);
+    str2[3] = 'z';
+    EXPECT_TRUE(str1 < str2);
+}
