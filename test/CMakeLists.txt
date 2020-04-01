@@ -1,6 +1,8 @@
 add_executable(Tests
     TestMain.cpp
     TestString.cpp
+    TestUtil.cpp
+    ${PROJECT_SOURCE_DIR}/src/Util.cpp
 )
 
 target_include_directories(Tests 
