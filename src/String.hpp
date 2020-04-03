@@ -230,33 +230,33 @@ private:
     std::vector<ValueType> mBuffer;
 };
 
-bool operator==(const String& lhs, const String& rhs) {
+inline bool operator==(const String& lhs, const String& rhs) {
     return lhs.size() == rhs.size() &&
         std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
-bool operator!=(const String& lhs, const String& rhs) {
+inline bool operator!=(const String& lhs, const String& rhs) {
     return !(lhs == rhs);
 }
 
-bool operator<(const String& lhs, const String& rhs) {
+inline bool operator<(const String& lhs, const String& rhs) {
     return std::lexicographical_compare(lhs.begin(), lhs.end(),
         rhs.begin(), rhs.end());
 }
 
-bool operator>(const String& lhs, const String& rhs) {
+inline bool operator>(const String& lhs, const String& rhs) {
     return rhs < lhs;
 }
 
-bool operator<=(const String& lhs, const String& rhs) {
+inline bool operator<=(const String& lhs, const String& rhs) {
     return !(rhs < lhs);
 }
 
-bool operator>=(const String& lhs, const String& rhs) {
+inline bool operator>=(const String& lhs, const String& rhs) {
     return !(lhs < rhs);
 }
 
-std::size_t hash(const String& str) {
+inline std::size_t hash(const String& str) {
     std::size_t result = 2166136261U;
     for (std::size_t i = 0; i < str.size(); ++i) {
         result ^= static_cast<std::size_t>(str[i]);

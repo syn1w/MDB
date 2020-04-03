@@ -7,7 +7,7 @@ using namespace mdb;
 TEST(UtilTest, test1) {
 #ifndef NDEBUG
     EXPECT_DEATH(MDB_UNREACHABLE("test"), 
-        "test\nUnreachable executed at .*TestUtil.cpp:8");
+        "test\nUnreachable executed at .*TestUtil.cpp:9");
 #else
     EXPECT_DEATH(MDB_UNREACHABLE("test"), "");
 #endif
