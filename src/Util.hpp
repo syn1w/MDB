@@ -14,12 +14,14 @@ void mdb_unreachable_internal(const char* msg, const char* filename,
 #define MDB_UNREACHABLE(msg) \
     ::mdb::mdb_unreachable_internal(msg, __FILE__, __LINE__)
 
-#if __has_builtin(__builtin_unreachable)
-# define MDB_BUILTIN_UNREACHABLE __builtin_unreachable()
+#if defined __has_builtin
+# if __has_builtin(__builtin_unreachable)
+#  define MDB_BUILTIN_UNREACHABLE __builtin_unreachable()
+# endif // __has_builtin(__builtin_unreachable)
 #elif defined(_MSC_VER)
 # define MDB_BUILTIN_UNREACHABLE __assume(false)
 #else
 # define MDB_BUILTIN_UNREACHABLE
-#endif 
+#endif // defined __has_builtin
 
 #endif // !MDB_UTIL_HPP
