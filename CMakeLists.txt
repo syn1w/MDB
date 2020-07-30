@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(MDB VERSION 1.0.0)
 
+set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ standard to conform to")
+
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif (NOT CMAKE_BUILD_TYPE)

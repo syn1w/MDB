@@ -5,25 +5,21 @@ add_executable(Tests
     ${PROJECT_SOURCE_DIR}/src/Util.cpp
 )
 
-target_include_directories(Tests 
+target_include_directories(Tests
     PRIVATE
     ${PROJECT_SOURCE_DIR}/src
 )
 
 find_package(GTest CONFIG REQUIRED)
 
-if(WIN32)
-    target_link_libraries(Tests PRIVATE
-        GTest::gtest
-    )
-elseif(UNIX)
-    target_link_libraries(Tests PRIVATE
-        gtest
-        pthread
-    )
-endif (WIN32)
+target_link_libraries(Tests PRIVATE
+    gtest
+    pthread
+)
 
-add_test(NAME AllTest
-    COMMAND ./Tests
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
+add_custom_target(UnitTests
+    COMMAND ${PROJECT_BINARY_DIR}/test/Tests
+
+    DEPENDS Tests
+    COMMENT "MDB unit testing..."
 )
