@@ -3,7 +3,6 @@
 #include <cctype>
 #include <gtest/gtest.h>
 
-
 using namespace mdb;
 
 // Function test
@@ -112,9 +111,11 @@ TEST(StringTest, test7) {
     EXPECT_EQ(str1[13], '4');
 
     String str2;
-    str2.appendFmtStr("11111111111111111111111111111111111111111111111111111111"
+    str2.appendFmtStr(
+        "11111111111111111111111111111111111111111111111111111111"
         "1111111111111111111111111111111111111111111111111111111111111111111111"
-        "11%d", 42);
+        "11%d",
+        42);
     EXPECT_EQ(str2.size(), 130);
 }
 

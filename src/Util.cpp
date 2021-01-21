@@ -6,9 +6,9 @@
 
 namespace mdb {
 
-[[noreturn]]
-void mdb_unreachable_internal(const char* msg, const char* filename,
-                              std::uint32_t lineno) {
+[[noreturn]] void mdb_unreachable_internal(const char* msg,
+                                           const char* filename,
+                                           std::uint32_t lineno) {
 #ifndef NDEBUG
     if (msg) {
         std::cerr << msg << std::endl;
