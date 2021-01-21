@@ -16,23 +16,25 @@ namespace mdb {
 
 class String {
 public:
-    using SizeType  = std::size_t;
+    using SizeType = std::size_t;
     using ValueType = char;
+
 public:
     static const SizeType npos = static_cast<SizeType>(-1);
 
 public:
-    String() : mBuffer(1) { 
+    String() : mBuffer(1) {
         mBuffer[0] = '\0';
     }
 
-    String(const void* data, SizeType len) 
+    String(const void* data, SizeType len)
         : mBuffer(static_cast<const ValueType*>(data),
                   static_cast<const ValueType*>(data) + len) {
         mBuffer.push_back('\0');
     }
 
-    String(const ValueType* str) : String(str, std::strlen(str)) { }
+    String(const ValueType* str) : String(str, std::strlen(str)) {
+    }
 
     String(const String&) = default;
     String(String&&) noexcept = default;
@@ -51,8 +53,8 @@ public:
     }
 
     String& assign(const void* str, SizeType len) {
-        mBuffer.assign(static_cast<const ValueType*>(str), 
-            static_cast<const ValueType*>(str) + len);
+        mBuffer.assign(static_cast<const ValueType*>(str),
+                       static_cast<const ValueType*>(str) + len);
         mBuffer.push_back('\0');
         return *this;
     }
@@ -199,7 +201,7 @@ public:
         assert(pos < size() && "string index out of range");
         assert(pos + count <= size() && "string index out of range");
 
-        return String{ c_str() + pos, count };
+        return String{c_str() + pos, count};
     }
 
     void toLower() {
@@ -226,13 +228,14 @@ public:
         mBuffer.resize(newSize + 1, value);
         mBuffer[newSize] = '\0';
     }
+
 private:
     std::vector<ValueType> mBuffer;
 };
 
 inline bool operator==(const String& lhs, const String& rhs) {
     return lhs.size() == rhs.size() &&
-        std::equal(lhs.begin(), lhs.end(), rhs.begin());
+           std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
 inline bool operator!=(const String& lhs, const String& rhs) {
@@ -240,8 +243,8 @@ inline bool operator!=(const String& lhs, const String& rhs) {
 }
 
 inline bool operator<(const String& lhs, const String& rhs) {
-    return std::lexicographical_compare(lhs.begin(), lhs.end(),
-        rhs.begin(), rhs.end());
+    return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(),
+                                        rhs.end());
 }
 
 inline bool operator>(const String& lhs, const String& rhs) {
