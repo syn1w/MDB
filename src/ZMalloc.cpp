@@ -22,6 +22,14 @@ static const std::size_t kPerfixSize = (sizeof(std::size_t));
 
 static std::atomic_size_t usedMemory{0};
 
+static void addUsedMemory(std::size_t n) noexcept {
+    usedMemory.fetch_add(n, std::memory_order_relaxed);
+}
+
+static void subUsedMemory(std::size_t n) noexcept {
+    usedMemory.fetch_sub(n, std::memory_order_relaxed);
+}
+
 static void zmallocDefaultOOM(std::size_t size) {
     std::cerr << "zmalloc: Out of memory trying to allocate " << size
               << "bytes\n";
@@ -29,6 +37,8 @@ static void zmallocDefaultOOM(std::size_t size) {
 }
 
 static void (*zmallocOOMHandler)(std::size_t) = zmallocDefaultOOM;
+
+namespace mdb {
 
 void zmallocSetOOMHandler(void (*handler)(std::size_t)) {
     zmallocOOMHandler = handler;
@@ -38,17 +48,8 @@ std::size_t zmallocUsedMemory(void) {
     return usedMemory.load(std::memory_order_relaxed);
 }
 
-static void addUsedMemory(std::size_t n) noexcept {
-    usedMemory.fetch_add(n, std::memory_order_relaxed);
-}
-
-static void subUsedMemory(std::size_t n) noexcept {
-    usedMemory.fetch_sub(n, std::memory_order_relaxed);
-}
-
 // if there is no HAVE_MALLOC_SIZE, use sizoef(std::size_t) to
 // hold the space allocated by ptr
-// 
 //    +---------------------+---------------------------------+
 //    | sizeof(std::size_t) |           user data...          |
 //    +---------------------+---------------------------------+
@@ -114,3 +115,5 @@ void zfree(void* ptr) {
     free(realptr);
 #endif
 }
+
+} // namespace mdb
