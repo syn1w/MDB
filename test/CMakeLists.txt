@@ -2,6 +2,8 @@ add_executable(Tests
     TestMain.cpp
     TestString.cpp
     TestUtil.cpp
+    TestZMalloc.cpp
+    ${PROJECT_SOURCE_DIR}/src/ZMalloc.cpp
     ${PROJECT_SOURCE_DIR}/src/Util.cpp
 )
 
