@@ -12,6 +12,8 @@
 #include <string>
 #include <vector>
 
+#include "Allocator.hpp"
+
 namespace mdb {
 
 class String {
@@ -230,7 +232,7 @@ public:
     }
 
 private:
-    std::vector<ValueType> mBuffer;
+    std::vector<ValueType, Allocator<ValueType>> mBuffer;
 };
 
 inline bool operator==(const String& lhs, const String& rhs) {
