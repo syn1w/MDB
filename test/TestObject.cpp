@@ -13,9 +13,8 @@ TEST(ObjectTest, testEnumToString) {
     EXPECT_EQ("rbtree", toString(ObjectEncode::kRBTree));
 
 #ifndef NDEBUG
-    EXPECT_DEATH(
-        toString(static_cast<ObjectType>(42)),
-        "unknow object type\nUnreachable executed at .*Object.cpp:20");
+    EXPECT_DEATH(toString(static_cast<ObjectType>(42)),
+                 "unknow object type\nUnreachable executed at .*Object.cpp:20");
 #else
     EXPECT_DEATH(static_cast<ObjectType>(42)), "");
 #endif
