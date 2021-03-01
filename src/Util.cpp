@@ -4,11 +4,19 @@
 #include <cstdlib>
 #include <iostream>
 
-namespace mdb {
+#if defined __has_builtin
+#if __has_builtin(__builtin_unreachable)
+#define MDB_BUILTIN_UNREACHABLE __builtin_unreachable()
+#endif // __has_builtin(__builtin_unreachable)
+#elif defined(_MSC_VER)
+#define MDB_BUILTIN_UNREACHABLE __assume(false)
+#else
+#define MDB_BUILTIN_UNREACHABLE
+#endif // defined __has_builtin
 
-[[noreturn]] void mdb_unreachable_internal(const char* msg,
-                                           const char* filename,
-                                           std::uint32_t lineno) {
+[[noreturn]] void mdb::details::mdb_unreachable_internal(const char* msg,
+                                                         const char* filename,
+                                                         std::uint32_t lineno) {
 #ifndef NDEBUG
     if (msg) {
         std::cerr << msg << std::endl;
@@ -22,5 +30,3 @@ namespace mdb {
     abort();
     MDB_BUILTIN_UNREACHABLE;
 }
-
-} // namespace mdb
