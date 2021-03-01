@@ -3,8 +3,10 @@ add_executable(Tests
     TestString.cpp
     TestUtil.cpp
     TestZMalloc.cpp
-    ${PROJECT_SOURCE_DIR}/src/ZMalloc.cpp
+    TestObject.cpp
+    ${PROJECT_SOURCE_DIR}/src/Object.cpp
     ${PROJECT_SOURCE_DIR}/src/Util.cpp
+    ${PROJECT_SOURCE_DIR}/src/ZMalloc.cpp
 )
 
 target_include_directories(Tests
