@@ -17,15 +17,13 @@ namespace details {
 
 #if __cplusplus >= 201703L
 #define MDB_FALLTHROUGH [[fallthrough]]
-#endif
-#if defined(__clang__) && defined(__has_cpp_attribute)
+#elif defined(__clang__) && defined(__has_cpp_attribute)
 #if __has_cpp_attribute(clang::fallthrough)
 #define MDB_FALLTHROUGH [[clang::fallthrough]]
 #endif
 #elif defined(__GNUC__) && __GNUC__ > 6
 #define MDB_FALLTHROUGH [[gnu::fallthrough]]
-#endif
-#ifndef MDB_FALLTHROUGH
+#else
 #define MDB_FALLTHROUGH
 #endif
 
