@@ -1,6 +1,6 @@
 // Just like zmalloc
-#ifndef MDB_ZMALLOC_HPP
-#define MDB_ZMALLOC_HPP
+#ifndef MDB_BASIC_ZMALLOC_HPP
+#define MDB_BASIC_ZMALLOC_HPP
 
 #include <cstdint>
 
@@ -53,4 +53,4 @@ std::size_t zmallocSize(void* ptr);
 
 } // namespace mdb
 
-#endif // !MDB_ZMALLOC_HPP
+#endif // !MDB_BASIC_ZMALLOC_HPP

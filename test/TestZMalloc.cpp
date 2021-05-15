@@ -1,7 +1,7 @@
 #undef USE_TCMALLOC
 #undef USE_JEMALLOC
 #undef __APPLE__
-#include "../src/ZMalloc.hpp"
+#include "../src/basic/ZMalloc.hpp"
 
 #include <gtest/gtest.h>
 

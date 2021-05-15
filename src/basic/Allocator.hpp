@@ -1,5 +1,5 @@
-#ifndef MDB_ALLOCATOR_HPP
-#define MDB_ALLOCATOR_HPP
+#ifndef MDB_BASIC_ALLOCATOR_HPP
+#define MDB_BASIC_ALLOCATOR_HPP
 
 #include <limits>
 #include <new> // placement new
@@ -71,4 +71,4 @@ struct Allocator {
 
 } // namespace mdb
 
-#endif // !MDB_ALLOCATOR_HPP
+#endif // !MDB_BASIC_ALLOCATOR_HPP

@@ -9,10 +9,14 @@ endif (NOT CMAKE_BUILD_TYPE)
 
 message(STATUS "CMake Build Type: ${CMAKE_BUILD_TYPE}")
 
+if (NOT UNIX)
+    message(FATAL_ERROR "Required Unix operating system")
+endif ()
+
 add_subdirectory(src)
 
 # Testing
-option(TESTING "enable testing" OFF)
+option(TESTING "enable testing" ON)
 if (TESTING)
     enable_testing()
     set(CTEST_OUTPUT_ON_FAILURE ON)
