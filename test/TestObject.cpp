@@ -1,4 +1,4 @@
-#include "../src/Object.hpp"
+#include "../src/core/Object.hpp"
 
 #include <gtest/gtest.h>
 
@@ -8,8 +8,8 @@ TEST(ObjectTest, testEnumToString) {
     EXPECT_EQ("string", toString(ObjectType::kString));
     EXPECT_EQ("list", toString(ObjectType::kList));
     EXPECT_EQ("raw", toString(ObjectEncode::kRaw));
-    EXPECT_EQ("hashtable", toString(ObjectEncode::kHashSet));
-    EXPECT_EQ("hashtable", toString(ObjectEncode::kHashMap));
+    EXPECT_EQ("hash", toString(ObjectType::kHash));
+    EXPECT_EQ("hashtable", toString(ObjectEncode::kHT));
     EXPECT_EQ("rbtree", toString(ObjectEncode::kRBTree));
 
 #ifndef NDEBUG

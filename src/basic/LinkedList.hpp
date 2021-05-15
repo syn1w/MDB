@@ -1,7 +1,7 @@
 // Double linked list.
 
-#ifndef MDB_LINKED_LIST_HPP
-#define MDB_LINKED_LIST_HPP
+#ifndef MDB_BASIC_LINKED_LIST_HPP
+#define MDB_BASIC_LINKED_LIST_HPP
 
 #include <list>
 
@@ -14,4 +14,4 @@ using LinkedList = std::list<T, Allocator<T>>;
 
 } // namespace mdb
 
-#endif // !MDB_LINKED_LIST_HPP
+#endif // !MDB_BASIC_LINKED_LIST_HPP

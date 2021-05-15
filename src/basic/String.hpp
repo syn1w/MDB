@@ -1,7 +1,7 @@
 // Simple dynamic string library.
 // Using String instead of std::string for binary security.
-#ifndef MDB_STRING_HPP
-#define MDB_STRING_HPP
+#ifndef MDB_BASIC_STRING_HPP
+#define MDB_BASIC_STRING_HPP
 
 #include <cassert>
 #include <cctype>
@@ -273,4 +273,4 @@ inline std::size_t hash(const String& str) {
 
 } // namespace mdb
 
-#endif // !MDB_STRING_HPP
+#endif // !MDB_BASIC_STRING_HPP

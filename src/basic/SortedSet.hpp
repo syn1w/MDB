@@ -1,5 +1,5 @@
-#ifndef MDB_SORTED_SET_HPP
-#define MDB_SORTED_SET_HPP
+#ifndef MDB_BASIC_SORTED_SET_HPP
+#define MDB_BASIC_SORTED_SET_HPP
 
 #include <set>
 
@@ -12,4 +12,4 @@ using SortedSet = std::set<T, std::less<T>, Allocator<T>>;
 
 } // namespace mdb
 
-#endif // !MDB_SORTED_SET_HPP
+#endif // !MDB_BASIC_SORTED_SET_HPP

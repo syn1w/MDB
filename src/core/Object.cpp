@@ -1,6 +1,6 @@
 #include "Object.hpp"
 
-#include "Util.hpp"
+#include "../basic/Util.hpp"
 
 namespace mdb {
 
@@ -14,8 +14,8 @@ const char* toString(ObjectType type) {
         return "set";
     case ObjectType::kZSet:
         return "zset";
-    case ObjectType::kDict:
-        return "dict";
+    case ObjectType::kHash:
+        return "hash";
     default:
         MDB_UNREACHABLE("unknow object type");
     }
@@ -23,21 +23,19 @@ const char* toString(ObjectType type) {
 
 const char* toString(ObjectEncode encode) {
     switch (encode) {
-    case ObjectEncode::kRaw:
-        return "raw";
-    case ObjectEncode::kInteger:
-        return "integer";
+    case ObjectEncode::kInt:
+        return "int";
     case ObjectEncode::kEmbStr:
         return "embstr";
-    case ObjectEncode::kHashSet:
-        MDB_FALLTHROUGH;
-    case ObjectEncode::kHashMap:
+    case ObjectEncode::kRaw:
+        return "raw";
+    case ObjectEncode::kHT:
         return "hashtable";
     case ObjectEncode::kLinkedList:
         return "linkedlist";
     case ObjectEncode::kZipList:
         return "ziplist";
-    case ObjectEncode::kIntSet:
+    case ObjectEncode::KIntSet:
         return "intset";
     case ObjectEncode::kRBTree:
         return "rbtree";

@@ -1,28 +1,27 @@
-#ifndef MDB_OBJECT_HPP
-#define MDB_OBJECT_HPP
+#ifndef MDB_CORE_OBJECT_HPP
+#define MDB_CORE_OBJECT_HPP
 
 #include <cstdint>
 
 namespace mdb {
 
 enum class ObjectType : std::uint32_t {
-    kString, // raw, integer, embstr?
-    kList,   // linkedlist, ziplist?
-    kSet,    // hashset, intset?
-    kZSet,   // rbtree, ziplist?
-    kDict,   // hashtable, ziplist?
+    kString,
+    kList,
+    kHash,
+    kSet,
+    kZSet,
 };
 
 enum class ObjectEncode : std::uint32_t {
-    kRaw,
-    kInteger,
+    kInt,
     kEmbStr, // TODO: Support it
-    kHashSet,
-    kHashMap,
+    kRaw,
+    kHT,
     kLinkedList,
-    kZipList, // TODO: Support it
-    kIntSet,  // TODO: Support it
-    kRBTree,
+    KIntSet,   // TODO: Support it
+    kZipList,  // TODO: Support it
+    kRBTree,   // Use rbtree instead of skiplist
 };
 
 class Object {
@@ -47,4 +46,4 @@ const char* toString(ObjectEncode encode);
 
 } // namespace mdb
 
-#endif // !MDB_OBJECT_HPP
+#endif // !MDB_CORE_OBJECT_HPP

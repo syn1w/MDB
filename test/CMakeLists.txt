@@ -4,9 +4,6 @@ add_executable(Tests
     TestUtil.cpp
     TestZMalloc.cpp
     TestObject.cpp
-    ${PROJECT_SOURCE_DIR}/src/Object.cpp
-    ${PROJECT_SOURCE_DIR}/src/Util.cpp
-    ${PROJECT_SOURCE_DIR}/src/ZMalloc.cpp
 )
 
 target_include_directories(Tests
@@ -19,6 +16,8 @@ find_package(GTest CONFIG REQUIRED)
 target_link_libraries(Tests PRIVATE
     gtest
     pthread
+    MDBBasic
+    MDBCore
 )
 
 add_custom_target(UnitTests

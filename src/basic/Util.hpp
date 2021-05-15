@@ -1,5 +1,5 @@
-#ifndef MDB_UTIL_HPP
-#define MDB_UTIL_HPP
+#ifndef MDB_BASIC_UTIL_HPP
+#define MDB_BASIC_UTIL_HPP
 
 #include <cstdint>
 
@@ -27,4 +27,4 @@ namespace details {
 #define MDB_FALLTHROUGH
 #endif
 
-#endif // !MDB_UTIL_HPP
+#endif // !MDB_BASIC_UTIL_HPP

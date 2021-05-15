@@ -1,5 +1,5 @@
-#ifndef MDB_DICT_HPP
-#define MDB_DICT_HPP
+#ifndef MDB_BASIC_HASH_MAP_HPP
+#define MDB_BASIC_HASH_MAP_HPP
 
 #include <unordered_map>
 
@@ -13,4 +13,4 @@ using Dict = std::unordered_map<K, V, std::hash<K>, std::equal_to<K>,
 
 } // namespace mdb
 
-#endif // !MDB_DICT_HPP
+#endif // !MDB_BASIC_HASH_MAP_HPP
