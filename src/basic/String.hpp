@@ -3,6 +3,8 @@
 #ifndef MDB_BASIC_STRING_HPP
 #define MDB_BASIC_STRING_HPP
 
+#include <algorithm>
+#include <array>
 #include <cassert>
 #include <cctype>
 #include <cstdarg>
@@ -37,6 +39,9 @@ public:
 
     String(const ValueType* str) : String(str, std::strlen(str)) {
     }
+
+    static String FromInt(std::int64_t value);
+    static String FromFloat(long double);
 
     String(const String&) = default;
     String(String&&) noexcept = default;
@@ -232,7 +237,9 @@ public:
     }
 
 private:
-    std::vector<ValueType, Allocator<ValueType>> mBuffer;
+    using Container = std::vector<ValueType, Allocator<ValueType>>;
+
+    Container mBuffer;
 };
 
 inline bool operator==(const String& lhs, const String& rhs) {

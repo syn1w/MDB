@@ -1,15 +1,16 @@
 add_library(MDBBasic STATIC
     # Headers
     Allocator.hpp
-    HashTable.hpp
+    HashMap.hpp
     LinkedList.hpp
-    Set.hpp
+    HashSet.hpp
     SortedSet.hpp
     String.hpp
     Util.hpp
     ZMalloc.hpp
 
     # Sources
+    String.cpp
     Util.cpp
     ZMalloc.cpp
 )

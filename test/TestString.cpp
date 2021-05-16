@@ -1,6 +1,8 @@
 #include "../src/basic/String.hpp"
 
+#include <cassert>
 #include <cctype>
+#include <climits>
 #include <gtest/gtest.h>
 
 using namespace mdb;
@@ -30,6 +32,29 @@ TEST(StringTest, test1) {
     EXPECT_EQ(str1.size(), 0);
     EXPECT_EQ(str.size(), 3);
     EXPECT_EQ(str[0], '.');
+
+    String str2 = String::FromInt(42);
+    EXPECT_EQ(str2.size(), 2);
+    EXPECT_EQ(str2[0], '4');
+    EXPECT_EQ(str2[1], '2');
+
+    // -2147483648
+    String str3 = String::FromInt(INT_MIN);
+    EXPECT_EQ(str3.size(), 11);
+    EXPECT_EQ(str3, String{"-2147483648"});
+
+    // 2147483647
+    String str4 = String::FromInt(INT_MAX);
+    EXPECT_EQ(str4.size(), 10);
+    EXPECT_EQ(str4, String{"2147483647"});
+
+    String str5 = String::FromFloat(3.0);
+    EXPECT_EQ(str5.size(), 1);
+    EXPECT_EQ(str5, String{"3"});
+
+    String str6 = String::FromFloat(3);
+    EXPECT_EQ(str6.size(), 1);
+    EXPECT_EQ(str6[0], '3');
 }
 
 TEST(StringTest, test2) {
