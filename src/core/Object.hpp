@@ -1,6 +1,10 @@
 #ifndef MDB_CORE_OBJECT_HPP
 #define MDB_CORE_OBJECT_HPP
 
+#include "../basic/HashMap.hpp"
+#include "../basic/HashSet.hpp"
+#include "../basic/LinkedList.hpp"
+#include "../basic/SortedSet.hpp"
 #include "../basic/String.hpp"
 #include <cstdint>
 
@@ -99,17 +103,24 @@ public:
     Object(double value);
     Object(const char* ptr, std::size_t len);
 
-    /// createString is optimized because shared objects are used first
+    // createString is optimized because shared objects are used first
     static Object createString(std::int64_t value);
-    static Object createString(const char* ptr, std::size_t len);
     static Object createString(double value);
+    static Object createString(const char* ptr, std::size_t len);
+
+    static Object createList();
+    static Object createHash();
+    static Object createSet();
+    static Object createZSet();
 
 public:
-    const String* castToString() const {
-        return reinterpret_cast<String*>(mValue);
+    template <typename R>
+    R* castTo() const {
+        return reinterpret_cast<R*>(mValue);
     }
 
     std::int64_t castToInt() const {
+        assert(mType == ObjectType::kString && mEncode == ObjectEncode::kInt);
         return static_cast<std::int64_t>(
             reinterpret_cast<std::intptr_t>(mValue));
     }
@@ -127,8 +138,28 @@ public:
     }
 
 private:
+    // Constructing from String rvalue reference
+    // Only as a delegate constructor and therefore set to private
+    Object(String&& str);
+
+private:
     // details
-    void freeString();
+    template <typename T, typename... Args>
+    static T* newValue(Args&&... args) {
+        Allocator<T> alloc;
+        T* value = alloc.allocate(sizeof(T));
+        alloc.construct(value, std::forward<Args>(args)...);
+
+        return value;
+    }
+
+    template <typename T>
+    void deleteValue() {
+        T* ptr = castTo<T>();
+        Allocator<T> alloc;
+        alloc.destroy(ptr);
+        alloc.deallocate(ptr, 0 /*unused*/);
+    }
 
     static constexpr std::size_t kPointerSize = sizeof(void*);
     static constexpr std::size_t kInt64Size = sizeof(std::int64_t);
@@ -138,6 +169,9 @@ private:
     ObjectType mType : kTypeBits;
     ObjectEncode mEncode : kEncodeBits;
     std::uint32_t mLRU : kLRUBits;
+
+    // FIXME: memory leak, reference count error
+    // mValue -> | ValueObject + RefCount |
     mutable std::int32_t mRefCount; // single thread
 
     void* mValue;

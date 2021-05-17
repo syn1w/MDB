@@ -44,12 +44,12 @@ TEST(ObjectTest, testStringObject) {
     Object strObj4{"test string", 11};
     EXPECT_EQ(ObjectType::kString, strObj4.getType());
     EXPECT_EQ(ObjectEncode::kRaw, strObj4.getEncode());
-    EXPECT_EQ(String{"test string"}, *strObj4.castToString());
+    EXPECT_EQ(String{"test string"}, *strObj4.castTo<String>());
 
     Object strObj5 = strObj4;
     EXPECT_EQ(ObjectType::kString, strObj5.getType());
     EXPECT_EQ(ObjectEncode::kRaw, strObj5.getEncode());
-    EXPECT_EQ(String{"test string"}, *strObj5.castToString());
+    EXPECT_EQ(String{"test string"}, *strObj5.castTo<String>());
 
     Object strObj6 = std::move(strObj4);
     EXPECT_TRUE(strObj6.hasValue());
@@ -57,10 +57,28 @@ TEST(ObjectTest, testStringObject) {
     EXPECT_TRUE(strObj5.hasValue());
     EXPECT_EQ(ObjectType::kString, strObj5.getType());
     EXPECT_EQ(ObjectEncode::kRaw, strObj5.getEncode());
-    EXPECT_EQ(String{"test string"}, *strObj5.castToString());
+    EXPECT_EQ(String{"test string"}, *strObj5.castTo<String>());
 
     Object strObj7 = SharedObjects::getInteger(42);
     EXPECT_EQ(ObjectType::kString, strObj7.getType());
     EXPECT_EQ(ObjectEncode::kInt, strObj7.getEncode());
     EXPECT_EQ(42, strObj7.castToInt());
+}
+
+TEST(ObjectTest, OtherObjectTest) {
+    Object listObj = Object::createList();
+    EXPECT_EQ(ObjectType::kList, listObj.getType());
+    EXPECT_EQ(ObjectEncode::kLinkedList, listObj.getEncode());
+
+    Object hashMapObj = Object::createHash();
+    EXPECT_EQ(ObjectType::kHash, hashMapObj.getType());
+    EXPECT_EQ(ObjectEncode::kHT, hashMapObj.getEncode());
+
+    Object hashSetObj = Object::createSet();
+    EXPECT_EQ(ObjectType::kSet, hashSetObj.getType());
+    EXPECT_EQ(ObjectEncode::kHT, hashSetObj.getEncode());
+
+    Object zsetObj = Object::createZSet();
+    EXPECT_EQ(ObjectType::kZSet, zsetObj.getType());
+    EXPECT_EQ(ObjectEncode::kRBTree, zsetObj.getEncode());
 }

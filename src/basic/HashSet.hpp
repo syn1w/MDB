@@ -3,12 +3,12 @@
 
 #include <unordered_set>
 
-#include "Allocator.hpp"
+#include "String.hpp"
 
 namespace mdb {
 
-template <typename T>
-using Set = std::unordered_set<T, std::hash<T>, std::equal_to<T>, Allocator<T>>;
+using HashSet = std::unordered_set<String, HashString, std::equal_to<String>,
+                                   Allocator<String>>;
 
 } // namespace mdb
 

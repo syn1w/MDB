@@ -3,13 +3,13 @@
 
 #include <unordered_map>
 
-#include "Allocator.hpp"
+#include "String.hpp"
 
 namespace mdb {
 
-template <typename K, typename V>
-using Dict = std::unordered_map<K, V, std::hash<K>, std::equal_to<K>,
-                                Allocator<std::pair<const K, V>>>;
+using HashMap =
+    std::unordered_map<String, String, HashString, std::equal_to<String>,
+                       Allocator<std::pair<const String, String>>>;
 
 } // namespace mdb
 

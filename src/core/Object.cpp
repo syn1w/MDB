@@ -48,6 +48,13 @@ const char* toString(ObjectEncode encode) {
     }
 }
 
+Object::Object(String&& str)
+    : mType(ObjectType::kString), mEncode(ObjectEncode::kRaw), mLRU(0),
+      mRefCount(1) {
+
+    mValue = newValue<String>(std::move(str));
+}
+
 Object::Object(std::int64_t value)
     : mType(ObjectType::kString), mEncode(ObjectEncode::kInt), mLRU(0),
       mRefCount(1) {
@@ -60,22 +67,17 @@ Object::Object(std::int64_t value)
         mValue = reinterpret_cast<void*>(value);
     } else {
         mEncode = ObjectEncode::kRaw;
-        mValue = new String{value};
+        mValue = newValue<String>(value);
     };
 #else
 #error "sizeof(void*) must be 8 or 4"
 #endif
 }
 
-Object::Object(double value)
-    : mType(ObjectType::kString), mEncode(ObjectEncode::kRaw), mLRU(0),
-      mRefCount(1) {
-    mValue = new String(value);
+Object::Object(double value) : Object(String{value}) {
 }
 
-Object::Object(const char* ptr, std::size_t len)
-    : mType(ObjectType::kString), mEncode(ObjectEncode::kRaw), mLRU(0),
-      mRefCount(1), mValue(new String{ptr, len}) {
+Object::Object(const char* ptr, std::size_t len) : Object(String{ptr, len}) {
 }
 
 Object Object::createString(std::int64_t value) {
@@ -97,28 +99,69 @@ Object Object::createString(double value) {
     return Object(value);
 }
 
+#define INIT_CONTAINER_VALUE(TYPE) Allocator<TYPE> alloc;
+
+Object Object::createList() {
+    // TODO: Support ZipList
+    auto* value = newValue<LinkedList>();
+    return Object{ObjectType::kList, ObjectEncode::kLinkedList, value};
+}
+
+Object Object::createHash() {
+    // TODO: Support ZipList
+    auto* value = newValue<HashMap>();
+    return Object{ObjectType::kHash, ObjectEncode::kHT, value};
+}
+
+Object Object::createSet() {
+    // TODO: Support IntSet
+    auto* value = newValue<HashSet>();
+    return Object{ObjectType::kSet, ObjectEncode::kHT, value};
+}
+
+Object Object::createZSet() {
+    // TODO: Support ZipList
+    auto* value = newValue<TreeSet>();
+    return Object{ObjectType::kZSet, ObjectEncode::kRBTree, value};
+}
+
 Object::~Object() {
-    if (--mRefCount > 0) {
+    if (--mRefCount > 0 || mValue == nullptr) {
         return;
     }
 
     // release
     switch (mType) {
     case ObjectType::kString:
-        freeString();
+        if (mEncode == ObjectEncode::kRaw) {
+            deleteValue<String>();
+        }
         break;
-
+    case ObjectType::kList:
+        if (mEncode == ObjectEncode::kLinkedList) {
+            deleteValue<LinkedList>();
+        }
+        break;
+    case ObjectType::kHash:
+        if (mEncode == ObjectEncode::kHT) {
+            deleteValue<HashMap>();
+        }
+        break;
+    case ObjectType::kSet:
+        if (mEncode == ObjectEncode::kHT) {
+            deleteValue<HashSet>();
+        }
+        break;
+    case ObjectType::kZSet:
+        if (mEncode == ObjectEncode::kRBTree) {
+            deleteValue<TreeSet>();
+        }
+        break;
     default:
         break;
     }
 
     mValue = nullptr;
-}
-
-void Object::freeString() {
-    if (mEncode == ObjectEncode::kRaw) {
-        delete castToString();
-    }
 }
 
 } // namespace mdb

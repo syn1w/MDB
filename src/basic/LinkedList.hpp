@@ -5,12 +5,11 @@
 
 #include <list>
 
-#include "Allocator.hpp"
+#include "String.hpp"
 
 namespace mdb {
 
-template <typename T>
-using LinkedList = std::list<T, Allocator<T>>;
+using LinkedList = std::list<String, Allocator<String>>;
 
 } // namespace mdb
 

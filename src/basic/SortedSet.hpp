@@ -3,12 +3,11 @@
 
 #include <set>
 
-#include "Allocator.hpp"
+#include "String.hpp"
 
 namespace mdb {
 
-template <typename T>
-using SortedSet = std::set<T, std::less<T>, Allocator<T>>;
+using TreeSet = std::set<String, std::less<String>, Allocator<String>>;
 
 } // namespace mdb
 

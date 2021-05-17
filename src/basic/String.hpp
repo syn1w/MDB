@@ -268,15 +268,17 @@ inline bool operator>=(const String& lhs, const String& rhs) {
     return !(lhs < rhs);
 }
 
-inline std::size_t hash(const String& str) {
-    std::size_t result = 2166136261U;
-    for (std::size_t i = 0; i < str.size(); ++i) {
-        result ^= static_cast<std::size_t>(str[i]);
-        result *= 16777619U;
-    }
+struct HashString {
+    std::size_t operator()(const String& str) const {
+        std::size_t result = 2166136261U;
+        for (std::size_t i = 0; i < str.size(); ++i) {
+            result ^= static_cast<std::size_t>(str[i]);
+            result *= 16777619U;
+        }
 
-    return result;
-}
+        return result;
+    }
+};
 
 } // namespace mdb
 

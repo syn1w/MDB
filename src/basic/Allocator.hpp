@@ -63,7 +63,7 @@ struct Allocator {
 
     template <typename Obj>
     void destroy(Obj* ptr) {
-        ptr->~T();
+        ptr->~Obj();
     }
 };
 
