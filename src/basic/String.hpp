@@ -177,7 +177,7 @@ public:
         va_copy(cpy, ap);
         int rlen = std::vsnprintf(sbuf, kSmallBufLen, fmt, cpy);
         assert(rlen >= 0);
-        if (rlen < kSmallBufLen) {
+        if (rlen < static_cast<int>(kSmallBufLen)) {
             append(sbuf, rlen);
             return *this;
         }

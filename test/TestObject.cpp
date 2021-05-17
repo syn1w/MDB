@@ -7,12 +7,12 @@
 using namespace mdb;
 
 TEST(ObjectTest, testToString) {
-    EXPECT_EQ("string", toString(ObjectType::kString));
-    EXPECT_EQ("list", toString(ObjectType::kList));
-    EXPECT_EQ("raw", toString(ObjectEncode::kRaw));
-    EXPECT_EQ("hash", toString(ObjectType::kHash));
-    EXPECT_EQ("hashtable", toString(ObjectEncode::kHT));
-    EXPECT_EQ("rbtree", toString(ObjectEncode::kRBTree));
+    EXPECT_EQ(std::string{"string"}, toString(ObjectType::kString));
+    EXPECT_EQ(std::string{"list"}, toString(ObjectType::kList));
+    EXPECT_EQ(std::string{"raw"}, toString(ObjectEncode::kRaw));
+    EXPECT_EQ(std::string{"hash"}, toString(ObjectType::kHash));
+    EXPECT_EQ(std::string{"hashtable"}, toString(ObjectEncode::kHT));
+    EXPECT_EQ(std::string{"rbtree"}, toString(ObjectEncode::kRBTree));
 
 #ifndef NDEBUG
     EXPECT_DEATH(toString(static_cast<ObjectType>(42)),

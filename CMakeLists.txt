@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.0)
 project(MDB VERSION 1.0.0)
 
+if (NOT UNIX)
+    message(FATAL_ERROR "Required Unix operating system")
+endif ()
+
 set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ standard to conform to")
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -9,9 +13,7 @@ endif (NOT CMAKE_BUILD_TYPE)
 
 message(STATUS "CMake Build Type: ${CMAKE_BUILD_TYPE}")
 
-if (NOT UNIX)
-    message(FATAL_ERROR "Required Unix operating system")
-endif ()
+add_compile_options(-Wall -Wextra)
 
 add_subdirectory(src)
 

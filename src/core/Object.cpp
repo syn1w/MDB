@@ -73,7 +73,9 @@ Object::Object(const char* ptr, std::size_t len)
 }
 
 Object Object::createString(std::int64_t value) {
-    if (value >= 0 && value < SharedObjects::get().kNumberSharedIntegers) {
+    constexpr std::int64_t kNumSharedIntegers =
+        static_cast<std::int64_t>(SharedObjects::kNumberSharedIntegers);
+    if (value >= 0 && value < kNumSharedIntegers) {
         return SharedObjects::getInteger(value);
     }
 
