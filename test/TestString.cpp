@@ -33,28 +33,26 @@ TEST(StringTest, test1) {
     EXPECT_EQ(str.size(), 3);
     EXPECT_EQ(str[0], '.');
 
-    String str2 = String::FromInt(42);
+    String str2{42L};
     EXPECT_EQ(str2.size(), 2);
     EXPECT_EQ(str2[0], '4');
     EXPECT_EQ(str2[1], '2');
 
-    // -2147483648
-    String str3 = String::FromInt(INT_MIN);
+    String str3{-2147483648L};
     EXPECT_EQ(str3.size(), 11);
     EXPECT_EQ(str3, String{"-2147483648"});
 
-    // 2147483647
-    String str4 = String::FromInt(INT_MAX);
+    String str4{2147483647L};
     EXPECT_EQ(str4.size(), 10);
     EXPECT_EQ(str4, String{"2147483647"});
 
-    String str5 = String::FromFloat(3.0);
+    String str5{3.0};
     EXPECT_EQ(str5.size(), 1);
     EXPECT_EQ(str5, String{"3"});
 
-    String str6 = String::FromFloat(3);
-    EXPECT_EQ(str6.size(), 1);
-    EXPECT_EQ(str6[0], '3');
+    String str6{1.5};
+    EXPECT_EQ(str6.size(), 3);
+    EXPECT_EQ(str6, String{"1.5"});
 }
 
 TEST(StringTest, test2) {

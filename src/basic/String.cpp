@@ -34,17 +34,18 @@ String::SizeType intToString(char* buf, T value) {
 
 } // namespace
 
-String String::FromInt(std::int64_t value) {
+String::String(std::int64_t value) {
     char buf[kMaxNumberSize];
     SizeType len = intToString(buf, value);
 
-    return String{buf, len};
+    mBuffer = Container{buf, buf + len};
+    mBuffer.emplace_back('\0');
 }
 
-String String::FromFloat(long double value) {
+String::String(double value) {
     std::array<char, 256> buf;
     buf.fill('\0');
-    std::size_t len = std::snprintf(buf.data(), buf.size(), "%.17Lg", value);
+    std::size_t len = std::snprintf(buf.data(), buf.size(), "%.17g", value);
 
     // Remove tailing zeros after '.'
     if (std::find(buf.begin(), buf.end(), '.') != buf.end()) {
@@ -59,7 +60,8 @@ String String::FromFloat(long double value) {
         }
     }
 
-    return String{buf.data(), len};
+    mBuffer = Container{buf.data(), buf.data() + len};
+    mBuffer.emplace_back('\0');
 }
 
 } // namespace mdb

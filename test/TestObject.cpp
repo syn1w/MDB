@@ -26,17 +26,17 @@ TEST(ObjectTest, testStringObject) {
     Object obj0;
     EXPECT_FALSE(obj0.hasValue());
 
-    Object strObj1{42};
+    Object strObj1{42L};
     EXPECT_EQ(ObjectType::kString, strObj1.getType());
     EXPECT_EQ(ObjectEncode::kInt, strObj1.getEncode());
     EXPECT_EQ(42, strObj1.castToInt());
 
-    Object strObj2 = Object::createString(42);
+    Object strObj2 = Object::createString(42L);
     EXPECT_EQ(ObjectType::kString, strObj2.getType());
     EXPECT_EQ(ObjectEncode::kInt, strObj2.getEncode());
     EXPECT_EQ(42, strObj2.castToInt());
 
-    Object strObj3 = Object::createString(20000);
+    Object strObj3 = Object::createString(20000L);
     EXPECT_EQ(ObjectType::kString, strObj3.getType());
     EXPECT_EQ(ObjectEncode::kInt, strObj3.getEncode());
     EXPECT_EQ(20000, strObj3.castToInt());

@@ -40,8 +40,8 @@ public:
     String(const ValueType* str) : String(str, std::strlen(str)) {
     }
 
-    static String FromInt(std::int64_t value);
-    static String FromFloat(long double);
+    String(std::int64_t value);
+    String(double value);
 
     String(const String&) = default;
     String(String&&) noexcept = default;

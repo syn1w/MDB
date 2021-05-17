@@ -49,7 +49,7 @@ public:
           mRefCount(++rhs.mRefCount), mValue(rhs.mValue) {
     }
 
-    Object(Object&& rhs)
+    Object(Object&& rhs) noexcept
         : mType(rhs.mType), mEncode(rhs.mEncode), mLRU(rhs.mLRU),
           mRefCount(rhs.mRefCount), mValue(rhs.mValue) {
         rhs.mRefCount = 0;
@@ -76,7 +76,7 @@ public:
         return *this;
     }
 
-    Object& operator=(Object&& rhs) {
+    Object& operator=(Object&& rhs) noexcept {
         mType = rhs.mType;
         mEncode = rhs.mEncode;
         mLRU = rhs.mLRU;
@@ -96,11 +96,13 @@ public:
     }
 
     Object(std::int64_t value);
+    Object(double value);
     Object(const char* ptr, std::size_t len);
 
     /// createString is optimized because shared objects are used first
     static Object createString(std::int64_t value);
     static Object createString(const char* ptr, std::size_t len);
+    static Object createString(double value);
 
 public:
     const String* castToString() const {

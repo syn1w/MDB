@@ -67,6 +67,12 @@ Object::Object(std::int64_t value)
 #endif
 }
 
+Object::Object(double value)
+    : mType(ObjectType::kString), mEncode(ObjectEncode::kRaw), mLRU(0),
+      mRefCount(1) {
+    mValue = new String(value);
+}
+
 Object::Object(const char* ptr, std::size_t len)
     : mType(ObjectType::kString), mEncode(ObjectEncode::kRaw), mLRU(0),
       mRefCount(1), mValue(new String{ptr, len}) {
@@ -85,6 +91,10 @@ Object Object::createString(std::int64_t value) {
 Object Object::createString(const char* ptr, std::size_t len) {
     // TODO: Support embstr
     return Object(ptr, len);
+}
+
+Object Object::createString(double value) {
+    return Object(value);
 }
 
 Object::~Object() {
