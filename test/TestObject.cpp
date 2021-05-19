@@ -65,7 +65,7 @@ TEST(ObjectTest, testStringObject) {
     EXPECT_EQ(42, strObj7.castToInt());
 }
 
-TEST(ObjectTest, OtherObjectTest) {
+TEST(ObjectTest, otherObjectTest) {
     Object listObj = Object::createList();
     EXPECT_EQ(ObjectType::kList, listObj.getType());
     EXPECT_EQ(ObjectEncode::kLinkedList, listObj.getEncode());

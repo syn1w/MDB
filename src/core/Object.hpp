@@ -4,8 +4,8 @@
 #include "../basic/HashMap.hpp"
 #include "../basic/HashSet.hpp"
 #include "../basic/LinkedList.hpp"
-#include "../basic/SortedSet.hpp"
 #include "../basic/String.hpp"
+#include "../basic/TreeSet.hpp"
 #include <cstdint>
 
 namespace mdb {
@@ -26,7 +26,7 @@ enum class ObjectEncode : std::uint32_t {
     kRaw,
     kHT,
     kLinkedList,
-    KIntSet,  // TODO: Support it
+    kIntSet,  // TODO: Support it
     kZipList, // TODO: Support it
     kRBTree,  // Use rbtree instead of skiplist
 };
@@ -40,42 +40,38 @@ public:
 public:
     Object()
         : mType(ObjectType::kUnknown), mEncode(ObjectEncode::kUnknown), mLRU(0),
-          mRefCount(0), mValue(nullptr) {
+          mValue(nullptr) {
     }
 
-    Object(Object& rhs)
-        : mType(rhs.mType), mEncode(rhs.mEncode), mLRU(rhs.mLRU),
-          mRefCount(++rhs.mRefCount), mValue(rhs.mValue) {
+    Object(ObjectType type, ObjectEncode encode, RefCountBase* ptr)
+        : mType(type), mEncode(encode), mLRU(0), mValue(ptr) {
+        if (mValue && mEncode != ObjectEncode::kInt) {
+            mValue->retain();
+        }
     }
 
     Object(const Object& rhs)
         : mType(rhs.mType), mEncode(rhs.mEncode), mLRU(rhs.mLRU),
-          mRefCount(++rhs.mRefCount), mValue(rhs.mValue) {
+          mValue(rhs.mValue) {
+        if (rhs.mValue && mEncode != ObjectEncode::kInt) {
+            rhs.mValue->retain();
+        }
     }
 
     Object(Object&& rhs) noexcept
         : mType(rhs.mType), mEncode(rhs.mEncode), mLRU(rhs.mLRU),
-          mRefCount(rhs.mRefCount), mValue(rhs.mValue) {
-        rhs.mRefCount = 0;
+          mValue(rhs.mValue) {
         rhs.mValue = nullptr;
-    }
-
-    Object& operator=(Object& rhs) {
-        mType = rhs.mType;
-        mEncode = rhs.mEncode;
-        mLRU = rhs.mLRU;
-        mRefCount = ++rhs.mRefCount;
-        mValue = rhs.mValue;
-
-        return *this;
     }
 
     Object& operator=(const Object& rhs) {
         mType = rhs.mType;
         mEncode = rhs.mEncode;
         mLRU = rhs.mLRU;
-        mRefCount = ++rhs.mRefCount;
         mValue = rhs.mValue;
+        if (rhs.mValue && mEncode != ObjectEncode::kInt) {
+            rhs.mValue->retain();
+        }
 
         return *this;
     }
@@ -84,20 +80,13 @@ public:
         mType = rhs.mType;
         mEncode = rhs.mEncode;
         mLRU = rhs.mLRU;
-        mRefCount = rhs.mRefCount;
         mValue = rhs.mValue;
-
-        rhs.mRefCount = 0;
         rhs.mValue = nullptr;
 
         return *this;
     }
 
     ~Object();
-
-    Object(ObjectType type, ObjectEncode encode, void* ptr)
-        : mType(type), mEncode(encode), mLRU(0), mRefCount(1), mValue(ptr) {
-    }
 
     Object(std::int64_t value);
     Object(double value);
@@ -153,14 +142,6 @@ private:
         return value;
     }
 
-    template <typename T>
-    void deleteValue() {
-        T* ptr = castTo<T>();
-        Allocator<T> alloc;
-        alloc.destroy(ptr);
-        alloc.deallocate(ptr, 0 /*unused*/);
-    }
-
     static constexpr std::size_t kPointerSize = sizeof(void*);
     static constexpr std::size_t kInt64Size = sizeof(std::int64_t);
     static constexpr std::size_t kInt32Size = sizeof(std::int32_t);
@@ -170,11 +151,7 @@ private:
     ObjectEncode mEncode : kEncodeBits;
     std::uint32_t mLRU : kLRUBits;
 
-    // FIXME: memory leak, reference count error
-    // mValue -> | ValueObject + RefCount |
-    mutable std::int32_t mRefCount; // single thread
-
-    void* mValue;
+    RefCountBase* mValue;
 };
 
 const char* toString(ObjectType type);

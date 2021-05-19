@@ -15,10 +15,11 @@
 #include <vector>
 
 #include "Allocator.hpp"
+#include "RefCountBase.hpp"
 
 namespace mdb {
 
-class String {
+class String : public RefCountBase {
 public:
     using SizeType = std::size_t;
     using ValueType = char;
@@ -94,7 +95,7 @@ public:
         return mBuffer.data()[pos];
     }
 
-    const ValueType* c_str() const {
+    const ValueType* cstr() const {
         return mBuffer.data();
     }
 
@@ -208,7 +209,7 @@ public:
         assert(pos < size() && "string index out of range");
         assert(pos + count <= size() && "string index out of range");
 
-        return String{c_str() + pos, count};
+        return String{cstr() + pos, count};
     }
 
     void toLower() {

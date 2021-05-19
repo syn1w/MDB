@@ -5,6 +5,10 @@ if (NOT UNIX)
     message(FATAL_ERROR "Required Unix operating system")
 endif ()
 
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+  message(FATAL_ERROR "In-source builds are not allowed.")
+endif()
+
 set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ standard to conform to")
 
 if (NOT CMAKE_BUILD_TYPE)

@@ -39,7 +39,7 @@ const char* toString(ObjectEncode encode) {
         return "linkedlist";
     case ObjectEncode::kZipList:
         return "ziplist";
-    case ObjectEncode::KIntSet:
+    case ObjectEncode::kIntSet:
         return "intset";
     case ObjectEncode::kRBTree:
         return "rbtree";
@@ -49,25 +49,25 @@ const char* toString(ObjectEncode encode) {
 }
 
 Object::Object(String&& str)
-    : mType(ObjectType::kString), mEncode(ObjectEncode::kRaw), mLRU(0),
-      mRefCount(1) {
+    : mType(ObjectType::kString), mEncode(ObjectEncode::kRaw), mLRU(0) {
 
     mValue = newValue<String>(std::move(str));
+    mValue->retain();
 }
 
 Object::Object(std::int64_t value)
-    : mType(ObjectType::kString), mEncode(ObjectEncode::kInt), mLRU(0),
-      mRefCount(1) {
+    : mType(ObjectType::kString), mEncode(ObjectEncode::kInt), mLRU(0) {
 
 #if (kPointerSize == kInt64Size)
-    mValue = reinterpret_cast<void*>(value);
+    mValue = reinterpret_cast<RefCountBase*>(value);
 #elif (kPointerSize == kInt32Size)
     if (value >= std::numeric_limits<std::int32_t>::min() &&
         value <= std::numeric_limits<std::int32_t>::max()) {
-        mValue = reinterpret_cast<void*>(value);
+        mValue = reinterpret_cast<RefCountBase*>(value);
     } else {
         mEncode = ObjectEncode::kRaw;
         mValue = newValue<String>(value);
+        mValue->retain();
     };
 #else
 #error "sizeof(void*) must be 8 or 4"
@@ -99,8 +99,6 @@ Object Object::createString(double value) {
     return Object(value);
 }
 
-#define INIT_CONTAINER_VALUE(TYPE) Allocator<TYPE> alloc;
-
 Object Object::createList() {
     // TODO: Support ZipList
     auto* value = newValue<LinkedList>();
@@ -126,42 +124,39 @@ Object Object::createZSet() {
 }
 
 Object::~Object() {
-    if (--mRefCount > 0 || mValue == nullptr) {
+    if (!mValue) {
         return;
     }
 
-    // release
     switch (mType) {
     case ObjectType::kString:
         if (mEncode == ObjectEncode::kRaw) {
-            deleteValue<String>();
+            mValue->release(castTo<String>());
         }
         break;
     case ObjectType::kList:
         if (mEncode == ObjectEncode::kLinkedList) {
-            deleteValue<LinkedList>();
+            mValue->release(castTo<LinkedList>());
         }
         break;
     case ObjectType::kHash:
         if (mEncode == ObjectEncode::kHT) {
-            deleteValue<HashMap>();
+            mValue->release(castTo<HashMap>());
         }
         break;
     case ObjectType::kSet:
         if (mEncode == ObjectEncode::kHT) {
-            deleteValue<HashSet>();
+            mValue->release(castTo<HashSet>());
         }
         break;
     case ObjectType::kZSet:
         if (mEncode == ObjectEncode::kRBTree) {
-            deleteValue<TreeSet>();
+            mValue->release(castTo<TreeSet>());
         }
         break;
     default:
         break;
     }
-
-    mValue = nullptr;
 }
 
 } // namespace mdb

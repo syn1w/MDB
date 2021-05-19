@@ -7,7 +7,12 @@
 
 namespace mdb {
 
-using TreeSet = std::set<String, std::less<String>, Allocator<String>>;
+class TreeSet : public RefCountBase {
+public:
+    using Container = std::set<String, std::less<String>, Allocator<String>>;
+
+    Container data;
+};
 
 } // namespace mdb
 
