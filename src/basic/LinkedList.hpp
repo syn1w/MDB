@@ -5,12 +5,17 @@
 
 #include <list>
 
-#include "Allocator.hpp"
+#include "RefCountBase.hpp"
+#include "String.hpp"
 
 namespace mdb {
 
-template <typename T>
-using LinkedList = std::list<T, Allocator<T>>;
+class LinkedList : public RefCountBase {
+public:
+    using Container = std::list<String, Allocator<String>>;
+
+    Container data;
+};
 
 } // namespace mdb
 

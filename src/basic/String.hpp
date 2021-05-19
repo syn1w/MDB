@@ -3,6 +3,8 @@
 #ifndef MDB_BASIC_STRING_HPP
 #define MDB_BASIC_STRING_HPP
 
+#include <algorithm>
+#include <array>
 #include <cassert>
 #include <cctype>
 #include <cstdarg>
@@ -13,10 +15,11 @@
 #include <vector>
 
 #include "Allocator.hpp"
+#include "RefCountBase.hpp"
 
 namespace mdb {
 
-class String {
+class String : public RefCountBase {
 public:
     using SizeType = std::size_t;
     using ValueType = char;
@@ -37,6 +40,9 @@ public:
 
     String(const ValueType* str) : String(str, std::strlen(str)) {
     }
+
+    String(std::int64_t value);
+    String(double value);
 
     String(const String&) = default;
     String(String&&) noexcept = default;
@@ -89,7 +95,7 @@ public:
         return mBuffer.data()[pos];
     }
 
-    const ValueType* c_str() const {
+    const ValueType* cstr() const {
         return mBuffer.data();
     }
 
@@ -172,7 +178,7 @@ public:
         va_copy(cpy, ap);
         int rlen = std::vsnprintf(sbuf, kSmallBufLen, fmt, cpy);
         assert(rlen >= 0);
-        if (rlen < kSmallBufLen) {
+        if (rlen < static_cast<int>(kSmallBufLen)) {
             append(sbuf, rlen);
             return *this;
         }
@@ -203,7 +209,7 @@ public:
         assert(pos < size() && "string index out of range");
         assert(pos + count <= size() && "string index out of range");
 
-        return String{c_str() + pos, count};
+        return String{cstr() + pos, count};
     }
 
     void toLower() {
@@ -232,7 +238,9 @@ public:
     }
 
 private:
-    std::vector<ValueType, Allocator<ValueType>> mBuffer;
+    using Container = std::vector<ValueType, Allocator<ValueType>>;
+
+    Container mBuffer;
 };
 
 inline bool operator==(const String& lhs, const String& rhs) {
@@ -261,15 +269,17 @@ inline bool operator>=(const String& lhs, const String& rhs) {
     return !(lhs < rhs);
 }
 
-inline std::size_t hash(const String& str) {
-    std::size_t result = 2166136261U;
-    for (std::size_t i = 0; i < str.size(); ++i) {
-        result ^= static_cast<std::size_t>(str[i]);
-        result *= 16777619U;
-    }
+struct HashString {
+    std::size_t operator()(const String& str) const {
+        std::size_t result = 2166136261U;
+        for (std::size_t i = 0; i < str.size(); ++i) {
+            result ^= static_cast<std::size_t>(str[i]);
+            result *= 16777619U;
+        }
 
-    return result;
-}
+        return result;
+    }
+};
 
 } // namespace mdb
 

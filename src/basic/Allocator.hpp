@@ -24,10 +24,8 @@ struct Allocator {
         using other = Allocator<U>;
     };
 
-    Allocator() noexcept {
-    }
-    Allocator(const Allocator<T>&) noexcept {
-    }
+    Allocator() noexcept = default;
+    Allocator(const Allocator<T>&) noexcept = default;
 
     template <typename U>
     Allocator(const Allocator<U>&) noexcept {
@@ -65,7 +63,7 @@ struct Allocator {
 
     template <typename Obj>
     void destroy(Obj* ptr) {
-        ptr->~T();
+        ptr->~Obj();
     }
 };
 

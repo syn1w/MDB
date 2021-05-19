@@ -3,12 +3,19 @@
 
 #include <unordered_set>
 
-#include "Allocator.hpp"
+#include "RefCountBase.hpp"
+#include "String.hpp"
 
 namespace mdb {
 
-template <typename T>
-using Set = std::unordered_set<T, std::hash<T>, std::equal_to<T>, Allocator<T>>;
+class HashSet : public RefCountBase {
+public:
+    using Container =
+        std::unordered_set<String, HashString, std::equal_to<String>,
+                           Allocator<String>>;
+
+    Container data;
+};
 
 } // namespace mdb
 
